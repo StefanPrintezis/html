@@ -14,6 +14,7 @@ use Mockery as m;
 
 class FormAccessibleTest extends PHPUnit_Framework_TestCase
 {
+
     public function setUp()
     {
         Capsule::table('models')->truncate();
@@ -24,9 +25,6 @@ class FormAccessibleTest extends PHPUnit_Framework_TestCase
         $this->modelData = [
           'string'     => 'abcdefghijklmnop',
           'email'      => 'tj@tjshafer.com',
-          'address'    => [
-              'street' => 'abcde st'
-          ],
           'created_at' => $this->now,
           'updated_at' => $this->now,
         ];
@@ -44,12 +42,6 @@ class FormAccessibleTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($model->getFormValue('string'), 'ponmlkjihgfedcba');
         $this->assertEquals($model->getFormValue('created_at'), $this->now->timestamp);
-    }
-
-    public function testItCanGetRelatedValueForForms()
-    {
-        $model = new ModelThatUsesForms($this->modelData);
-        $this->assertEquals($model->getFormValue('address.street'), 'abcde st');
     }
 
     public function testItCanStillMutateValuesForViews()
@@ -73,6 +65,7 @@ class FormAccessibleTest extends PHPUnit_Framework_TestCase
 
 class ModelThatUsesForms extends Model
 {
+
     use FormAccessible;
 
     protected $table = 'models';
@@ -100,6 +93,7 @@ class ModelThatUsesForms extends Model
 
 class ModelThatDoesntUseForms extends Model
 {
+
     protected $table = 'models';
 
     public function getStringAttribute($value)
